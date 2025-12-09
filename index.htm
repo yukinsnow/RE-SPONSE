@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应答组 RE-SPONSE | 官方门户</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --bg-secondary: #f4f4f5;
+            --text-main: #18181b;
+            --text-sub: #71717a;
+            --primary: #ff4757; /* 品牌红 */
+            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* === 导航栏 === */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .nav-logo { 
+            font-weight: 900; 
+            font-size: 1.4rem; 
+            color: var(--text-main); 
+            display: flex;
+            flex-direction: column; /* 桌面端默认垂直排列 */
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .nav-logo span {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-top: 3px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-sub);
+            margin-left: 30px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* === 通用 Section === */
+        section {
+            padding: 100px 50px;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+            color: var(--text-main);
+            font-weight: 900;
+        }
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px; left: 0; width: 40px; height: 4px;
+            background: var(--primary);
+        }
+
+        /* === 首页 Hero === */
+        #home {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #fff 0%, #f9f9f9 100%);
+        }
+
+        .hero-logo-container {
+            width: 400px;
+            height: 400px;
+            margin-bottom: 20px;
+            animation: float 6s ease-in-out infinite;
+        }
+        .hero-logo-container img { width: 100%; height: 100%; object-fit: contain; }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+            color: var(--text-main);
+            letter-spacing: 5px;
+        }
+
+        .hero-title-en {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--primary);
+            letter-spacing: 12px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            max-width: 600px;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* === 成员介绍 === */
+        #members {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-color);
+            overflow: hidden;
+            padding: 0;
+            height: 100vh;
+        }
+
+        .member-control {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            position: relative;
+        }
+
+        .diamond-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            transform: rotate(45deg);
+            padding: 20px;
+        }
+
+        .diamond-item {
+            width: 160px;
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            border: 4px solid #fff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            filter: grayscale(100%);
+        }
+
+        .diamond-item img {
+            width: 142%;
+            height: 142%;
+            position: absolute;
+            top: -21%; left: -21%;
+            transform: rotate(-45deg);
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .diamond-item:hover, .diamond-item.active {
+            filter: grayscale(0%);
+            border-color: var(--primary);
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 15px 30px rgba(255, 71, 87, 0.2);
+        }
+
+        .member-display {
+            flex: 1.2;
+            height: 100%;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #fff;
+            position: relative;
+        }
+
+        .bg-watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12vw; 
+            font-weight: 900;
+            color: rgba(0,0,0,0.03);
+            white-space: nowrap;
+            z-index: 0;
+            pointer-events: none;
+            font-family: sans-serif;
+        }
+
+        .info-content {
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        .info-content.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-role {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .info-name {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1;
+        }
+
+        .info-desc {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            line-height: 1.8;
+            max-width: 500px;
+            border-left: 4px solid #eee;
+            padding-left: 20px;
+        }
+
+        /* === 作品展示 === */
+        #works {
+            background: var(--bg-secondary);
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+        }
+
+        .work-item {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
+            display: block;
+        }
+
+        .work-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .work-thumb {
+            height: 200px;
+            background: #e4e4e7;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .work-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%; 
+            transition: transform 0.5s;
+        }
+
+        .work-item:hover .work-thumb img {
+            transform: scale(1.1);
+        }
+        
+        .work-thumb::after {
+            content: '▶';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px; height: 60px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: var(--text-main);
+            backdrop-filter: blur(5px);
+            z-index: 2;
+            transition: 0.3s;
+        }
+
+        .work-item:hover .work-thumb::after {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .work-details { padding: 25px; }
+        .work-title { font-size: 1.1rem; margin-bottom: 8px; font-weight: bold; color: var(--text-main); }
+        .work-meta { font-size: 0.85rem; color: var(--text-sub); }
+
+        /* === 专辑 === */
+        #album {
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        .album-content {
+            border: 2px solid var(--text-main);
+            padding: 60px 100px;
+            position: relative;
+        }
+        
+        .album-content::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px;
+            width: 100%; height: 100%;
+            background: var(--bg-secondary);
+            z-index: -1;
+        }
+
+        .glitch-text {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .coming-soon {
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* === 移动端适配 (关键修改) === */
+        @media (max-width: 900px) {
+            /* 1. 导航栏适配：强制一排，且Logo左右排列 */
+            nav {
+                padding: 15px 20px;
+            }
+            .nav-logo {
+                flex-direction: row; /* 关键：改为水平排列 */
+                align-items: baseline; /* 底部对齐 */
+                font-size: 1.1rem;
+            }
+            .nav-logo span {
+                display: inline-block; /* 恢复显示 */
+                margin-top: 0;
+                margin-left: 8px; /* 左侧增加间距 */
+                font-size: 0.6rem;
+                letter-spacing: 1px;
+            }
+            .nav-links a {
+                margin-left: 12px; /* 进一步压缩间距以防换行 */
+                font-size: 0.8rem;
+            }
+
+            /* 2. 其他适配 */
+            section { padding: 60px 20px; }
+            #members { flex-direction: column; height: auto; padding: 50px 0; }
+            .member-control { width: 100%; padding: 50px 0; }
+            .member-display { width: 100%; padding: 40px 20px; }
+            .diamond-grid { transform: rotate(0deg); display: flex; gap: 10px; }
+            .diamond-item { transform: none; width: 70px; height: 70px; border-radius: 50%; border: 2px solid #fff; }
+            .diamond-item img { transform: none; width: 100%; height: 100%; top: 0; left: 0; }
+            .info-name { font-size: 2.5rem; }
+            .bg-watermark { font-size: 15vw; }
+            .hero-logo-container { width: 250px; height: 250px; }
+            .hero-title { font-size: 3rem; }
+            .hero-title-en { font-size: 1rem; letter-spacing: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            应答组
+            <span>RE-SPONSE</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home">首页</a>
+            <a href="#members">成员</a>
+            <a href="#works">作品</a>
+            <a href="#album">专辑</a>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="hero-logo-container">
+            <img src="img/Logo.png" alt="应答组 Logo">
+        </div>
+        <h1 class="hero-title">应答组</h1>
+        <div class="hero-title-en">RE-SPONSE</div>
+        
+        <p class="hero-subtitle">
+            我们创造声音，回应期待。<br>
+            We create creative content, music videos, and digital dreams.
+        </p>
+    </section>
+
+    <!-- 成员介绍 -->
+    <div id="members">
+        <div class="member-control">
+            <div class="diamond-grid">
+                <!-- 1. Soda纯白 (Top) -->
+                <div class="diamond-item active" onmouseenter="showMember('bai')">
+                    <img src="img/bai.jpg" alt="Soda纯白">
+                </div>
+                <!-- 2. 贝贝 (Right) -->
+                <div class="diamond-item" onmouseenter="showMember('bei')">
+                    <img src="img/bei.jpg" alt="贝贝">
+                </div>
+                <!-- 3. 纸鸢 (Left) -->
+                <div class="diamond-item" onmouseenter="showMember('yao')">
+                    <img src="img/yao.jpg" alt="纸鸢">
+                </div>
+                <!-- 4. 举烛 (Bottom) -->
+                <div class="diamond-item" onmouseenter="showMember('zhu')">
+                    <img src="img/zhu.jpg" alt="举烛">
+                </div>
+            </div>
+        </div>
+
+        <div class="member-display">
+            <div class="bg-watermark" id="watermark">Soda纯白</div>
+            <div class="info-content show" id="info-box">
+                <span class="info-role" id="m-role">歌曲制作 / 策划</span>
+                <h3 class="info-name" id="m-name">Soda纯白</h3>
+                <p class="info-desc" id="m-desc">
+                    社团的核心大脑。负责所有原创歌曲的制作把控与整体企划，致力于将每一个灵感转化为完美的听觉体验。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 作品展示 -->
+    <section id="works">
+        <h2>LATEST WORKS</h2>
+        <div class="works-grid">
+            
+            <!-- 作品 1: 笨鸥 -->
+            <a href="https://www.bilibili.com/video/BV1stjJz9Ehw" target="_blank" class="work-item">
+                <div class="work-thumb">
+                    <img src="img/benou.jpg" alt="笨鸥">
+                </div>
+                <div class="work-details">
+                    <div class="work-title">【洛天依原创】笨鸥</div>
+                    <div class="work-meta">Released: 2025-05-24 | Original Music</div>
+                </div>
+            </a>
+
+            <!-- 作品 2: 夏日未应答 -->
+            <a href="https://www.bilibili.com/video/BV131421b7qH" target="_blank" class="work-item">
+                <div class="work-thumb">
+                    <img src="img/xiari.jpg" alt="夏日未应答">
+                </div>
+                <div class="work-details">
+                    <div class="work-title">【洛天依原创】夏日未应答</div>
+                    <div class="work-meta">Released: 2024-07-15 | Original Music</div>
+                </div>
+            </a>
+
+            <!-- 筹备中 -->
+            <div class="work-item" style="cursor: default; opacity: 0.7;">
+                <div class="work-thumb" style="background: #f0f0f0; color: #ccc;">
+                    <!-- 占位符 -->
+                </div>
+                <div class="work-details">
+                    <div class="work-title">More Works Coming Soon</div>
+                    <div class="work-meta">Stay Tuned</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 专辑 -->
+    <section id="album">
+        <div class="album-content">
+            <h2 class="glitch-text">DEBUT ALBUM</h2>
+            <p style="color: #666; margin: 20px 0;">首张社团同名专辑正在紧锣密鼓制作中。</p>
+            <div class="coming-soon">
+                [ LOADING... 30% ]<br>
+                COMING SOON 2027
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; font-size: 0.8rem; color: #999; background: #fff;">
+        &copy; 2025 应答组 RE-SPONSE GROUP. All Rights Reserved.
+    </footer>
+
+    <script>
+        const membersData = {
+            bai: {
+                name: "Soda纯白",
+                role: "歌曲制作 / 策划",
+                desc: "社团的核心大脑。负责所有原创歌曲的制作把控与整体企划，致力于将每一个灵感转化为完美的听觉体验。",
+                watermark: "Soda纯白"
+            },
+            bei: {
+                name: "贝贝-web-",
+                role: "美术设计 / 插画",
+                desc: "视觉世界的构建者。用色彩与线条赋予音乐形象，负责社团所有的插画绘制与美术视觉设计。",
+                watermark: "贝贝-web-"
+            },
+            yao: {
+                name: "纸鸢",
+                role: "视频制作 / 创意",
+                desc: "动态视觉的魔术师。负责PV制作与创意视频输出，擅长通过镜头语言将音乐的情感最大化。",
+                watermark: "纸鸢"
+            },
+            zhu: {
+                name: "举烛",
+                role: "歌词制作 / 文案",
+                desc: "以文字为引的诗人。负责歌词创作与深层文案撰写，为每一首旋律注入文学的灵魂。",
+                watermark: "举烛"
+            }
+        };
+
+        function showMember(id) {
+            const nameEl = document.getElementById('m-name');
+            const roleEl = document.getElementById('m-role');
+            const descEl = document.getElementById('m-desc');
+            const watermarkEl = document.getElementById('watermark');
+            const infoBox = document.getElementById('info-box');
+            const items = document.querySelectorAll('.diamond-item');
+
+            items.forEach(item => {
+                item.classList.remove('active');
+                if(item.querySelector('img').src.includes(id)) {
+                    item.classList.add('active');
+                }
+            });
+
+            infoBox.style.opacity = '0';
+            infoBox.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                const data = membersData[id];
+                nameEl.textContent = data.name;
+                roleEl.textContent = data.role;
+                descEl.textContent = data.desc;
+                watermarkEl.textContent = data.watermark;
+
+                infoBox.style.opacity = '1';
+                infoBox.style.transform = 'translateY(0)';
+            }, 200);
+        }
+    </script>
+
+</body>
+</html>
