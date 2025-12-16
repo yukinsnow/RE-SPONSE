@@ -46,7 +46,7 @@
             font-size: 1.4rem; 
             color: var(--text-main); 
             display: flex;
-            flex-direction: column; /* 桌面端默认垂直排列 */
+            flex-direction: column;
             line-height: 1;
             flex-shrink: 0;
         }
@@ -259,6 +259,43 @@
             max-width: 500px;
             border-left: 4px solid #eee;
             padding-left: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* 新增：个人代表作列表样式 */
+        .info-works-container {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+        .works-label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .works-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .work-link {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .work-link::before {
+            content: '↗';
+            margin-right: 8px;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+        .work-link:hover {
+            color: var(--primary);
+            transform: translateX(5px);
         }
 
         /* === 作品展示 === */
@@ -376,30 +413,13 @@
             100% { transform: translateY(0px); }
         }
 
-        /* === 移动端适配 (关键修改) === */
+        /* === 移动端适配 === */
         @media (max-width: 900px) {
-            /* 1. 导航栏适配：强制一排，且Logo左右排列 */
-            nav {
-                padding: 15px 20px;
-            }
-            .nav-logo {
-                flex-direction: row; /* 关键：改为水平排列 */
-                align-items: baseline; /* 底部对齐 */
-                font-size: 1.1rem;
-            }
-            .nav-logo span {
-                display: inline-block; /* 恢复显示 */
-                margin-top: 0;
-                margin-left: 8px; /* 左侧增加间距 */
-                font-size: 0.6rem;
-                letter-spacing: 1px;
-            }
-            .nav-links a {
-                margin-left: 12px; /* 进一步压缩间距以防换行 */
-                font-size: 0.8rem;
-            }
+            nav { padding: 15px 20px; }
+            .nav-logo { flex-direction: row; align-items: baseline; font-size: 1.1rem; }
+            .nav-logo span { display: inline-block; margin-top: 0; margin-left: 8px; font-size: 0.6rem; letter-spacing: 1px; }
+            .nav-links a { margin-left: 12px; font-size: 0.8rem; }
 
-            /* 2. 其他适配 */
             section { padding: 60px 20px; }
             #members { flex-direction: column; height: auto; padding: 50px 0; }
             .member-control { width: 100%; padding: 50px 0; }
@@ -409,6 +429,11 @@
             .diamond-item img { transform: none; width: 100%; height: 100%; top: 0; left: 0; }
             .info-name { font-size: 2.5rem; }
             .bg-watermark { font-size: 15vw; }
+            
+            /* 移动端作品列表微调 */
+            .info-works-container { padding-left: 10px; border-left: 2px solid #eee; margin-left: 10px; }
+            .work-link { font-size: 0.85rem; }
+            
             .hero-logo-container { width: 250px; height: 250px; }
             .hero-title { font-size: 3rem; }
             .hero-title-en { font-size: 1rem; letter-spacing: 5px; }
@@ -474,6 +499,14 @@
                 <p class="info-desc" id="m-desc">
                     社团的核心大脑。负责所有原创歌曲的制作把控与整体企划，致力于将每一个灵感转化为完美的听觉体验。
                 </p>
+                
+                <!-- 新增：作品列表容器 -->
+                <div class="info-works-container">
+                    <div class="works-label">Selected Works</div>
+                    <div class="works-list" id="m-works-list">
+                        <!-- JS会自动填充内容 -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -541,26 +574,51 @@
                 name: "Soda纯白",
                 role: "歌曲制作 / 策划",
                 desc: "社团的核心大脑。负责所有原创歌曲的制作把控与整体企划，致力于将每一个灵感转化为完美的听觉体验。",
-                watermark: "Soda纯白"
+                watermark: "Soda纯白",
+                works: [
+                    { title: "【稻米节主题曲】盗墓笔记·十年人间", url: "https://b23.tv/xW8nqrZ" },
+                    { title: "【国风原创】千里邀月", url: "https://b23.tv/vn7Q8yp" },
+                    { title: "【忘川风华录】云山尽处", url: "https://b23.tv/mTT4VdG" }
+                ]
             },
             bei: {
                 name: "贝贝-web-",
                 role: "美术设计 / 插画",
                 desc: "视觉世界的构建者。用色彩与线条赋予音乐形象，负责社团所有的插画绘制与美术视觉设计。",
-                watermark: "贝贝-web-"
+                watermark: "贝贝-web-",
+                works: [
+                    { title: "【洛天依原创】中华少女·终", url: "https://www.bilibili.com/video/BV17V4y1d7Tw" },
+                    { title: "【洛天依原创】所以我戴上了耳机", url: "https://www.bilibili.com/video/BV1ga411T7mv" },
+                    { title: "【2022贺岁纪】大梦仙缘", url: "https://www.bilibili.com/festival/VSF2022live?bvid=BV1PU4y1F7Vp" }
+                ]
             },
             yao: {
                 name: "纸鸢",
                 role: "视频制作 / 创意",
                 desc: "动态视觉的魔术师。负责PV制作与创意视频输出，擅长通过镜头语言将音乐的情感最大化。",
-                watermark: "纸鸢"
+                watermark: "纸鸢",
+                works: [
+                    { title: "【2025官方重制版】白石溪", url: "https://www.bilibili.com/video/BV1mNbyzfEMu" },
+                    { title: "【洛天依人格镜像原创曲】完美劲敌", url: "https://www.bilibili.com/video/BV1qe2tBdEHU" },
+                    { title: "【2025毕业季主题曲】我们都很棒", url: "https://www.bilibili.com/video/BV1P9NEzoE5o" }
+                ]
             },
             zhu: {
                 name: "举烛",
                 role: "歌词制作 / 文案",
                 desc: "以文字为引的诗人。负责歌词创作与深层文案撰写，为每一首旋律注入文学的灵魂。",
-                watermark: "举烛"
+                watermark: "举烛",
+                works: [
+                    { title: "【BDF十周年主题曲】此刻Memories", url: "https://b23.tv/nuh2aam" },
+                    { title: "【2025拜年祭】四季共舞", url: "https://b23.tv/ykbd4Lf" },
+                    { title: "【洛天依12周年官方曲】再声 Recall", url: "https://b23.tv/qCTv5b4" }
+                ]
             }
+        };
+
+        // 初始化加载第一个成员的作品
+        window.onload = function() {
+            renderWorks(membersData['bai'].works);
         };
 
         function showMember(id) {
@@ -587,10 +645,29 @@
                 roleEl.textContent = data.role;
                 descEl.textContent = data.desc;
                 watermarkEl.textContent = data.watermark;
+                
+                // 渲染作品列表
+                renderWorks(data.works);
 
                 infoBox.style.opacity = '1';
                 infoBox.style.transform = 'translateY(0)';
             }, 200);
+        }
+
+        function renderWorks(works) {
+            const listEl = document.getElementById('m-works-list');
+            listEl.innerHTML = ''; // 清空现有列表
+            
+            if(works && works.length > 0) {
+                works.forEach(work => {
+                    const a = document.createElement('a');
+                    a.href = work.url;
+                    a.target = "_blank";
+                    a.className = "work-link";
+                    a.textContent = work.title;
+                    listEl.appendChild(a);
+                });
+            }
         }
     </script>
 
