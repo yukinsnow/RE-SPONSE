@@ -96,14 +96,32 @@
             background: var(--primary);
         }
 
-        /* === 首页 Hero === */
+        /* === 首页 Hero (含雨滴特效) === */
         #home {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: radial-gradient(circle at center, #fff 0%, #f9f9f9 100%);
+            background: radial-gradient(circle at center, #fff 0%, #f0f2f5 100%); /*稍微加深一点背景让雨滴更明显*/
+            overflow: hidden; /* 防止雨滴溢出 */
+        }
+
+        /* 雨滴 Canvas 样式 */
+        #rain-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* 在背景之上 */
+            pointer-events: none; /* 允许点击穿透 */
+        }
+
+        /* 提升内容层级，确保在雨滴之上 */
+        .hero-logo-container, .hero-title, .hero-title-en, .hero-subtitle {
+            position: relative;
+            z-index: 2; 
         }
 
         .hero-logo-container {
@@ -262,7 +280,7 @@
             margin-bottom: 30px;
         }
 
-        /* 新增：个人代表作列表样式 */
+        /* 个人代表作列表样式 */
         .info-works-container {
             margin-top: 20px;
             padding-left: 20px;
@@ -430,7 +448,6 @@
             .info-name { font-size: 2.5rem; }
             .bg-watermark { font-size: 15vw; }
             
-            /* 移动端作品列表微调 */
             .info-works-container { padding-left: 10px; border-left: 2px solid #eee; margin-left: 10px; }
             .work-link { font-size: 0.85rem; }
             
@@ -456,6 +473,9 @@
     </nav>
 
     <section id="home">
+        <!-- 雨滴特效 Canvas -->
+        <canvas id="rain-canvas"></canvas>
+
         <div class="hero-logo-container">
             <img src="img/Logo.png" alt="应答组 Logo">
         </div>
@@ -500,11 +520,10 @@
                     社团的核心大脑。负责所有原创歌曲的制作把控与整体企划，致力于将每一个灵感转化为完美的听觉体验。
                 </p>
                 
-                <!-- 新增：作品列表容器 -->
                 <div class="info-works-container">
                     <div class="works-label">Selected Works</div>
                     <div class="works-list" id="m-works-list">
-                        <!-- JS会自动填充内容 -->
+                        <!-- JS填充 -->
                     </div>
                 </div>
             </div>
@@ -515,8 +534,6 @@
     <section id="works">
         <h2>LATEST WORKS</h2>
         <div class="works-grid">
-            
-            <!-- 作品 1: 笨鸥 -->
             <a href="https://www.bilibili.com/video/BV1stjJz9Ehw" target="_blank" class="work-item">
                 <div class="work-thumb">
                     <img src="img/benou.jpg" alt="笨鸥">
@@ -526,8 +543,6 @@
                     <div class="work-meta">Released: 2025-05-24 | Original Music</div>
                 </div>
             </a>
-
-            <!-- 作品 2: 夏日未应答 -->
             <a href="https://www.bilibili.com/video/BV131421b7qH" target="_blank" class="work-item">
                 <div class="work-thumb">
                     <img src="img/xiari.jpg" alt="夏日未应答">
@@ -537,18 +552,13 @@
                     <div class="work-meta">Released: 2024-07-15 | Original Music</div>
                 </div>
             </a>
-
-            <!-- 筹备中 -->
             <div class="work-item" style="cursor: default; opacity: 0.7;">
-                <div class="work-thumb" style="background: #f0f0f0; color: #ccc;">
-                    <!-- 占位符 -->
-                </div>
+                <div class="work-thumb" style="background: #f0f0f0; color: #ccc;"></div>
                 <div class="work-details">
                     <div class="work-title">More Works Coming Soon</div>
                     <div class="work-meta">Stay Tuned</div>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -569,6 +579,7 @@
     </footer>
 
     <script>
+        // === 1. 成员数据 ===
         const membersData = {
             bai: {
                 name: "Soda纯白",
@@ -616,11 +627,13 @@
             }
         };
 
-        // 初始化加载第一个成员的作品
+        // === 2. 页面初始化 ===
         window.onload = function() {
             renderWorks(membersData['bai'].works);
+            initRain(); // 启动雨滴特效
         };
 
+        // === 3. 成员切换逻辑 ===
         function showMember(id) {
             const nameEl = document.getElementById('m-name');
             const roleEl = document.getElementById('m-role');
@@ -645,8 +658,6 @@
                 roleEl.textContent = data.role;
                 descEl.textContent = data.desc;
                 watermarkEl.textContent = data.watermark;
-                
-                // 渲染作品列表
                 renderWorks(data.works);
 
                 infoBox.style.opacity = '1';
@@ -656,8 +667,7 @@
 
         function renderWorks(works) {
             const listEl = document.getElementById('m-works-list');
-            listEl.innerHTML = ''; // 清空现有列表
-            
+            listEl.innerHTML = ''; 
             if(works && works.length > 0) {
                 works.forEach(work => {
                     const a = document.createElement('a');
@@ -668,6 +678,77 @@
                     listEl.appendChild(a);
                 });
             }
+        }
+
+        // === 4. Canvas 雨滴特效逻辑 ===
+        function initRain() {
+            const canvas = document.getElementById('rain-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let drops = [];
+
+            function resize() {
+                width = canvas.width = document.getElementById('home').offsetWidth;
+                height = canvas.height = document.getElementById('home').offsetHeight;
+            }
+
+            // 创建雨滴对象
+            class Drop {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * -height; // 初始位置在屏幕上方
+                    this.speed = Math.random() * 5 + 5; // 下落速度 5-10
+                    this.length = Math.random() * 20 + 10; // 雨滴长度 10-30
+                    this.opacity = Math.random() * 0.5 + 0.1; // 透明度
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(174, 194, 224, ${this.opacity})`; // 蓝灰色雨滴
+                    ctx.lineWidth = 1.5;
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x, this.y + this.length);
+                    ctx.stroke();
+                }
+
+                update() {
+                    this.y += this.speed;
+                    if (this.y > height) {
+                        this.y = Math.random() * -100; // 重置到顶部上方
+                        this.x = Math.random() * width;
+                        this.speed = Math.random() * 5 + 5;
+                    }
+                }
+            }
+
+            // 初始化雨滴数量
+            function createDrops() {
+                drops = [];
+                const count = window.innerWidth < 900 ? 50 : 150; // 手机端少一点，电脑端多一点
+                for (let i = 0; i < count; i++) {
+                    drops.push(new Drop());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                drops.forEach(drop => {
+                    drop.update();
+                    drop.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            // 监听窗口大小变化
+            window.addEventListener('resize', () => {
+                resize();
+                createDrops();
+            });
+
+            // 启动
+            resize();
+            createDrops();
+            animate();
         }
     </script>
 
