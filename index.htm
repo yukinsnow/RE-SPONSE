@@ -103,22 +103,20 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: radial-gradient(circle at center, #fff 0%, #f0f2f5 100%); /*稍微加深一点背景让雨滴更明显*/
-            overflow: hidden; /* 防止雨滴溢出 */
+            background: radial-gradient(circle at center, #fff 0%, #f0f2f5 100%);
+            overflow: hidden;
         }
 
-        /* 雨滴 Canvas 样式 */
         #rain-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* 在背景之上 */
-            pointer-events: none; /* 允许点击穿透 */
+            z-index: 1;
+            pointer-events: none;
         }
 
-        /* 提升内容层级，确保在雨滴之上 */
         .hero-logo-container, .hero-title, .hero-title-en, .hero-subtitle {
             position: relative;
             z-index: 2; 
@@ -280,7 +278,6 @@
             margin-bottom: 30px;
         }
 
-        /* 个人代表作列表样式 */
         .info-works-container {
             margin-top: 20px;
             padding-left: 20px;
@@ -394,6 +391,7 @@
             justify-content: center;
             text-align: center;
             border-top: 1px solid #eee;
+            min-height: 80vh; /* 调整高度 */
         }
 
         .album-content {
@@ -425,6 +423,69 @@
             font-weight: bold;
         }
 
+        /* === 联系我们 (新增) === */
+        #contact {
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 60vh; /* 不需要全屏 */
+        }
+
+        .contact-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .contact-card {
+            background: #fff;
+            padding: 50px;
+            border-radius: 16px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            transition: 0.3s;
+        }
+
+        .contact-card:hover .contact-icon {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .contact-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-15px); }
@@ -454,6 +515,9 @@
             .hero-logo-container { width: 250px; height: 250px; }
             .hero-title { font-size: 3rem; }
             .hero-title-en { font-size: 1rem; letter-spacing: 5px; }
+
+            .contact-container { flex-direction: column; align-items: center; }
+            .contact-card { width: 100%; }
         }
     </style>
 </head>
@@ -469,19 +533,17 @@
             <a href="#members">成员</a>
             <a href="#works">作品</a>
             <a href="#album">专辑</a>
+            <a href="#contact">联系</a>
         </div>
     </nav>
 
     <section id="home">
-        <!-- 雨滴特效 Canvas -->
         <canvas id="rain-canvas"></canvas>
-
         <div class="hero-logo-container">
             <img src="img/Logo.png" alt="应答组 Logo">
         </div>
         <h1 class="hero-title">应答组</h1>
         <div class="hero-title-en">RE-SPONSE</div>
-        
         <p class="hero-subtitle">
             我们创造声音，回应期待。<br>
             We create creative content, music videos, and digital dreams.
@@ -519,12 +581,9 @@
                 <p class="info-desc" id="m-desc">
                     社团的核心大脑。负责所有原创歌曲的制作把控与整体企划，致力于将每一个灵感转化为完美的听觉体验。
                 </p>
-                
                 <div class="info-works-container">
                     <div class="works-label">Selected Works</div>
-                    <div class="works-list" id="m-works-list">
-                        <!-- JS填充 -->
-                    </div>
+                    <div class="works-list" id="m-works-list"></div>
                 </div>
             </div>
         </div>
@@ -571,6 +630,28 @@
                 [ LOADING... 30% ]<br>
                 COMING SOON 2027
             </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 (新增) -->
+    <section id="contact">
+        <h2>CONTACT US</h2>
+        <p style="margin-bottom: 50px; color: var(--text-sub);">商务合作与交流 | Business Inquiries & Collaboration</p>
+        
+        <div class="contact-container">
+            <!-- B站私信 -->
+            <a href="https://space.bilibili.com/123372" target="_blank" class="contact-card">
+                <div class="contact-icon">📺</div>
+                <div class="contact-title">Bilibili 私信</div>
+                <div class="contact-info">UID: 123372</div>
+            </a>
+
+            <!-- 邮件 -->
+            <a href="mailto:hitor@foxmail.com" class="contact-card">
+                <div class="contact-icon">✉️</div>
+                <div class="contact-title">发送邮件</div>
+                <div class="contact-info">hitor@foxmail.com</div>
+            </a>
         </div>
     </section>
 
@@ -630,7 +711,7 @@
         // === 2. 页面初始化 ===
         window.onload = function() {
             renderWorks(membersData['bai'].works);
-            initRain(); // 启动雨滴特效
+            initRain();
         };
 
         // === 3. 成员切换逻辑 ===
@@ -692,19 +773,18 @@
                 height = canvas.height = document.getElementById('home').offsetHeight;
             }
 
-            // 创建雨滴对象
             class Drop {
                 constructor() {
                     this.x = Math.random() * width;
-                    this.y = Math.random() * -height; // 初始位置在屏幕上方
-                    this.speed = Math.random() * 5 + 5; // 下落速度 5-10
-                    this.length = Math.random() * 20 + 10; // 雨滴长度 10-30
-                    this.opacity = Math.random() * 0.5 + 0.1; // 透明度
+                    this.y = Math.random() * -height;
+                    this.speed = Math.random() * 5 + 5;
+                    this.length = Math.random() * 20 + 10;
+                    this.opacity = Math.random() * 0.5 + 0.1;
                 }
 
                 draw() {
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(174, 194, 224, ${this.opacity})`; // 蓝灰色雨滴
+                    ctx.strokeStyle = `rgba(174, 194, 224, ${this.opacity})`;
                     ctx.lineWidth = 1.5;
                     ctx.moveTo(this.x, this.y);
                     ctx.lineTo(this.x, this.y + this.length);
@@ -714,17 +794,16 @@
                 update() {
                     this.y += this.speed;
                     if (this.y > height) {
-                        this.y = Math.random() * -100; // 重置到顶部上方
+                        this.y = Math.random() * -100;
                         this.x = Math.random() * width;
                         this.speed = Math.random() * 5 + 5;
                     }
                 }
             }
 
-            // 初始化雨滴数量
             function createDrops() {
                 drops = [];
-                const count = window.innerWidth < 900 ? 50 : 150; // 手机端少一点，电脑端多一点
+                const count = window.innerWidth < 900 ? 50 : 150;
                 for (let i = 0; i < count; i++) {
                     drops.push(new Drop());
                 }
@@ -739,13 +818,11 @@
                 requestAnimationFrame(animate);
             }
 
-            // 监听窗口大小变化
             window.addEventListener('resize', () => {
                 resize();
                 createDrops();
             });
 
-            // 启动
             resize();
             createDrops();
             animate();
