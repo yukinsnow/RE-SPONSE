@@ -391,7 +391,7 @@
             justify-content: center;
             text-align: center;
             border-top: 1px solid #eee;
-            min-height: 80vh; /* 调整高度 */
+            min-height: 80vh;
         }
 
         .album-content {
@@ -423,7 +423,7 @@
             font-weight: bold;
         }
 
-        /* === 联系我们 (新增) === */
+        /* === 联系我们 === */
         #contact {
             background: var(--bg-secondary);
             display: flex;
@@ -431,7 +431,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            min-height: 60vh; /* 不需要全屏 */
+            min-height: 60vh;
         }
 
         .contact-container {
@@ -593,6 +593,20 @@
     <section id="works">
         <h2>LATEST WORKS</h2>
         <div class="works-grid">
+            
+            <!-- 新歌: 我的世界总是在下雨 -->
+            <a href="https://www.bilibili.com/video/BV1hnr2BSEut" target="_blank" class="work-item">
+                <div class="work-thumb">
+                    <img src="img/xiayu.jpg" alt="我的世界总是在下雨">
+                </div>
+                <div class="work-details">
+                    <div class="work-title">【洛天依】我的世界总是在下雨</div>
+                    <!-- 高亮显示最新发布 -->
+                    <div class="work-meta" style="color: var(--primary); font-weight: bold;">Latest Release | Original Music</div>
+                </div>
+            </a>
+
+            <!-- 作品 2: 笨鸥 -->
             <a href="https://www.bilibili.com/video/BV1stjJz9Ehw" target="_blank" class="work-item">
                 <div class="work-thumb">
                     <img src="img/benou.jpg" alt="笨鸥">
@@ -602,6 +616,8 @@
                     <div class="work-meta">Released: 2025-05-24 | Original Music</div>
                 </div>
             </a>
+
+            <!-- 作品 3: 夏日未应答 -->
             <a href="https://www.bilibili.com/video/BV131421b7qH" target="_blank" class="work-item">
                 <div class="work-thumb">
                     <img src="img/xiari.jpg" alt="夏日未应答">
@@ -611,6 +627,8 @@
                     <div class="work-meta">Released: 2024-07-15 | Original Music</div>
                 </div>
             </a>
+
+            <!-- 筹备中 -->
             <div class="work-item" style="cursor: default; opacity: 0.7;">
                 <div class="work-thumb" style="background: #f0f0f0; color: #ccc;"></div>
                 <div class="work-details">
@@ -618,6 +636,7 @@
                     <div class="work-meta">Stay Tuned</div>
                 </div>
             </div>
+
         </div>
     </section>
 
@@ -633,20 +652,18 @@
         </div>
     </section>
 
-    <!-- 联系我们 (新增) -->
+    <!-- 联系我们 -->
     <section id="contact">
         <h2>CONTACT US</h2>
         <p style="margin-bottom: 50px; color: var(--text-sub);">商务合作与交流 | Business Inquiries & Collaboration</p>
         
         <div class="contact-container">
-            <!-- B站私信 -->
             <a href="https://space.bilibili.com/123372" target="_blank" class="contact-card">
                 <div class="contact-icon">📺</div>
                 <div class="contact-title">Bilibili 私信</div>
                 <div class="contact-info">UID: 123372</div>
             </a>
 
-            <!-- 邮件 -->
             <a href="mailto:hitor@foxmail.com" class="contact-card">
                 <div class="contact-icon">✉️</div>
                 <div class="contact-title">发送邮件</div>
